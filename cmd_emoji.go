@@ -29,7 +29,7 @@ func (g *GBFBot) cmdEmoji(ds *discordgo.Session, m *discordgo.MessageCreate, emo
 	)
 
 	name := fmt.Sprintf("%s.png", emoji)
-	file := path.Join(g.EmojiDir, name)
+	file := path.Join(g.Config.EmojiDir, name)
 
 	f, err = os.Open(file)
 	if err == nil {
@@ -46,7 +46,7 @@ func (g *GBFBot) cmdEmoji(ds *discordgo.Session, m *discordgo.MessageCreate, emo
 		similarNames []string
 	)
 
-	f, err = os.Open(g.EmojiDir)
+	f, err = os.Open(g.Config.EmojiDir)
 	if err != nil {
 		return err
 	}

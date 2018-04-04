@@ -6,14 +6,13 @@ import (
 	"sync"
 
 	"github.com/bwmarrin/discordgo"
+	"github.com/evanstan/gbf-discordgo/config"
 )
 
 
 //Main struct that wraps all the data required
 type GBFBot struct {
-	Token 	 string
-	Prefix 	 string
-	EmojiDir string
+	Config *config.Config
 
 	eventsMutex    sync.Mutex
 	currentEvents  []*CachedEvent
@@ -32,10 +31,10 @@ func (g *GBFBot) messageHandler(s *discordgo.Session, m *discordgo.MessageCreate
 		return
 	}
 
-	if g.Prefix == "" {
+	if g.Config.Prefix == "" {
 		return
 	}
-	if !strings.HasPrefix(m.Content, g.Prefix) {
+	if !strings.HasPrefix(m.Content, g.Config.Prefix) {
 		return
 	}
 
@@ -51,7 +50,7 @@ func (g *GBFBot) messageHandler(s *discordgo.Session, m *discordgo.MessageCreate
 		return
 	}
 
-	head = strings.TrimPrefix(parts[0], g.Prefix)
+	head = strings.TrimPrefix(parts[0], g.Config.Prefix)
 	if len(parts) > 1 {
 		tail = parts[1]
 	}
@@ -77,7 +76,7 @@ func (g *GBFBot) StartSession() {
 		return 
 	}
 
-	s, err := discordgo.New("Bot " + g.Token)
+	s, err := discordgo.New("Bot " + g.Config.Token)
 	if err != nil {
 		fmt.Println(err.Error())
 	}
@@ -100,7 +99,7 @@ func (g *GBFBot) StartSession() {
 
 	g.session = s
 
-	return
+	g.StartStrikeAlert()
 }
 
 //Close connection with Discord
@@ -118,6 +117,4 @@ func (g *GBFBot) CloseSession() {
 	}
 
 	fmt.Println("Session Closed")
-
-	return
 }
