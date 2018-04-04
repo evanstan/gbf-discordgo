@@ -18,13 +18,13 @@ func LoadConfig() {
 	}
 	fmt.Println("Token: " + Token)
 
-	Prefix = os.Getenv("Prefix")
+	Prefix = os.Getenv("PREFIX")
 	if Prefix == "" {
 		fmt.Println("$PREFIX not set")
 	}
 	fmt.Println("Prefix: " + Prefix)
 
-	EmojiDir = os.Getenv("EmojiDir")
+	EmojiDir = os.Getenv("EMOJIDIR")
 	if EmojiDir == "" {
 		fmt.Println("$EMOJIDIR not set")
 	}
