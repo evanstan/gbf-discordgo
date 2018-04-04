@@ -113,7 +113,7 @@ func CurrentEvents() (events []*Event, err error) {
 		return
 	}
 
-	td := doc.Find(".wikitable tr:nth-child(8) td:nth-child(1)").First()
+	td := doc.Find(".wikitable tr:nth-child(6) td:nth-child(1)").First()
 	if td.Length() == 0 {
 		err = errors.New("events container not found")
 
@@ -174,7 +174,7 @@ func UpcomingEvents() (events []*Event, err error) {
 		return
 	}
 
-	td := doc.Find(".wikitable tr:nth-child(12) td:nth-child(1)").First()
+	td := doc.Find(".wikitable tr:nth-child(10) td:nth-child(1)").First()
 	if td.Length() == 0 {
 		err = errors.New("events container not found")
 

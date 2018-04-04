@@ -27,7 +27,7 @@
 		},
 		{
 			"ImportPath": "github.com/evanstan/go-gbf",
-			"Rev": "074195fabf6238566a4a1d8c572a767464e7bffe"
+			"Rev": "a86123b77165142e62110f62d1996c7789abc74c"
 		},
 		{
 			"ImportPath": "github.com/gorilla/websocket",
