@@ -36,7 +36,7 @@ func (g *GBFBot) postStrikeAlert() {
 		"Stop lazing around and join some raids!",
 		"Start grinding for those SSRs!",
 		"Strike time is here!",
-		"Time to go all out!"
+		"Time to go all out!",
 		)
 
 	rand.Seed(time.Now().Unix())

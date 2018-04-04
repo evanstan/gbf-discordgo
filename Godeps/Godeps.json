@@ -35,6 +35,10 @@
 			"Rev": "eb925808374e5ca90c83401a40d711dc08c0c0f6"
 		},
 		{
+			"ImportPath": "github.com/jasonlvhit/gocron",
+			"Rev": "54194c9749d48b073c9aeb2c787b6882e95dd0cd"
+		},
+		{
 			"ImportPath": "golang.org/x/crypto/nacl/secretbox",
 			"Rev": "12892e8c234f4fe6f6803f052061de9057903bb2"
 		},
