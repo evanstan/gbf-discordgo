@@ -1,1 +1,1 @@
-worker: cmd/gbf-bot
+worker: gbf-bot
