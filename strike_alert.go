@@ -49,7 +49,7 @@ func (g *GBFBot) postStrikeAlert() {
 		},
 	}
 
-	_, err = g.session.ChannelMessageSendEmbed("431069931476484108", em)
+	_, err = g.session.ChannelMessageSendEmbed("429306303907627008", em)
 	if err != nil {
 		fmt.Println(err.Error())
 	}
