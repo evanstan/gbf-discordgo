@@ -5,5 +5,5 @@ const (
 	GBFLogoImageWidth  = 273
 	GBFLogoImageHeight = 187
 
-	GBFStikeImageURL   = "https://gbf.wiki/images/2/28/Stamp11.png"
+	GBFStikeImageURL   = "https://gbf.wiki/images/9/98/Stamp60.png"
 )

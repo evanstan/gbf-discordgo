@@ -35,8 +35,8 @@ func (g *GBFBot) postStrikeAlert() {
 	messages = append(messages,
 		"Stop lazing around and join some raids!",
 		"Start grinding for those SSRs!",
-		"Strike time is here!",
-		"Time to go all out!",
+		"A friendly reminder from the cutest Cagliostro",
+		"Everyone, go do your best for Cagliostro",
 		)
 
 	rand.Seed(time.Now().Unix())
