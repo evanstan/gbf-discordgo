@@ -31,6 +31,14 @@ func (g *GBFBot) messageHandler(s *discordgo.Session, m *discordgo.MessageCreate
 		return
 	}
 
+	//Congrats pock
+	if(m.ChannelID == "431164963214852107" && m.Author.ID == "95625294064390144") {
+		if(len(m.Attachments) > 0) {
+			g.sendCongrats(m)
+			return
+		}
+	}
+
 	if g.Config.Prefix == "" {
 		return
 	}
