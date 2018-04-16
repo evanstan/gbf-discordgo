@@ -7,6 +7,8 @@ import (
 	"path"
 	"sort"
 	"strings"
+	"math/rand"
+	"time"
 
 	"github.com/arbovm/levenshtein"
 	"github.com/bwmarrin/discordgo"
@@ -21,6 +23,11 @@ const (
 func (g *GBFBot) cmdEmoji(ds *discordgo.Session, m *discordgo.MessageCreate, emoji string) error {
 	if emoji == "" {
 		return errors.New("Please specify an emoji.")
+	}
+
+	if emoji  == "sad" {
+		rand.Seed(time.Now().Unix())
+		emoji = fmt.Sprintf("sad%d", rand.Intn(3) + 1)
 	}
 
 	var (
