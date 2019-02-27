@@ -2,6 +2,9 @@
 	"ImportPath": "github.com/evanstan/gbf-discordgo",
 	"GoVersion": "go1.10",
 	"GodepVersion": "v80",
+	"Packages": [
+		".\\cmd\\gbf-bot"
+	],
 	"Deps": [
 		{
 			"ImportPath": "github.com/PuerkitoBio/goquery",
