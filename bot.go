@@ -23,6 +23,7 @@ type GBFBot struct {
 
 var (
 	BotID string
+	FirstTime bool = true
 )
 
 //Event handler
@@ -67,14 +68,52 @@ func (g *GBFBot) messageHandler(s *discordgo.Session, m *discordgo.MessageCreate
 
 	switch head {
 	case "events":
-		err = g.cmdEvents(s, m)
+		//err = g.cmdEvents(s, m)
 	case "emo":
 		err = g.cmdEmoji(s, m, tail)
+	case "newcolor":
+		NewColor(s, m, tail)
+	case "newserver":
+		if CheckAdmin(m.Author.ID) {
+			Channel, _ := s.State.Channel(m.ChannelID)
+			JoinedNewGuild(s, Channel.GuildID)
+			s.ChannelMessageDelete(m.ChannelID, m.ID)
+		}
+	case "removeallcolors":
+		if CheckAdmin(m.Author.ID) {
+			Channel, _ := s.State.Channel(m.ChannelID)
+			RemoveAllColors(s, Channel.GuildID)
+			s.ChannelMessageDelete(m.ChannelID, m.ID)
+		}
 	}
 
 	if err != nil {
 		_, _ = s.ChannelMessageSend(m.ChannelID, err.Error())
 	}
+}
+
+func onReady(session *discordgo.Session, Ready *discordgo.Ready) {
+	if FirstTime {
+		session.UpdateStatus(0, "Number one cutest ☆")
+
+		for _, Guild := range Ready.Guilds {
+			LoadRoles(session, Guild.ID)
+			CreateNewRoles(session, Guild.ID)
+		}
+		fmt.Printf("Done.\n")
+		FirstTime = false
+	}
+}
+
+func OnMemberJoin(session *discordgo.Session, Member *discordgo.GuildMemberAdd) {
+	UpdateMemberColorRandom(session, Member.GuildID, Member.User.ID)
+}
+
+func MemberChunkRequest(session *discordgo.Session, event *discordgo.GuildMembersChunk) {
+	for _, Member := range event.Members {
+		UpdateMemberColorRandom(session, event.GuildID, Member.User.ID)
+	}
+	fmt.Printf("Updated all members.\n")
 }
 
 //Start connection with Discord
@@ -97,6 +136,9 @@ func (g *GBFBot) StartSession() {
 	BotID = u.ID
 
 	s.AddHandler(g.messageHandler)
+	s.AddHandler(onReady)
+	s.AddHandler(OnMemberJoin)
+	s.AddHandler(MemberChunkRequest)
 	fmt.Println("Opening session...")
 	err = s.Open()
 	if err != nil {

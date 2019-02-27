@@ -2,9 +2,6 @@
 	"ImportPath": "github.com/evanstan/gbf-discordgo",
 	"GoVersion": "go1.10",
 	"GodepVersion": "v80",
-	"Packages": [
-		"./..."
-	],
 	"Deps": [
 		{
 			"ImportPath": "github.com/PuerkitoBio/goquery",
@@ -57,6 +54,11 @@
 		{
 			"ImportPath": "golang.org/x/net/html/atom",
 			"Rev": "b68f30494add4df6bd8ef5e82803f308e7f7c59c"
+		},
+		{
+			"ImportPath": "gopkg.in/yaml.v2",
+			"Comment": "v2.2.2",
+			"Rev": "51d6538a90f86fe93ac480b35f37b2be17fef232"
 		}
 	]
 }
