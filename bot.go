@@ -98,7 +98,7 @@ func (g *GBFBot) messageHandler(s *discordgo.Session, m *discordgo.MessageCreate
 			RemoveAllColors(s, Channel.GuildID)
 			s.ChannelMessageDelete(m.ChannelID, m.ID)
 		}
-	case "reloacolors":
+	case "reloadcolors":
 		if CheckAdmin(m.Author.ID) {
 			Channel, _ := s.State.Channel(m.ChannelID)
 			colorconfig = ColorConfig{}
