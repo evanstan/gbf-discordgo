@@ -24,6 +24,11 @@ type GBFBot struct {
 var (
 	BotID string
 	FirstTime bool = true
+	HelpText = `!emo EmojiName "Post emoji"
+!printcolors   "Post all available colors"
+!newcolor   "Assign a random color to the current user"
+!newcolor ColorName   "Assign the specified color to the current user"
+!previewcolor ColorName   "Post a preview image of the color"`
 )
 
 //Event handler
@@ -73,6 +78,13 @@ func (g *GBFBot) messageHandler(s *discordgo.Session, m *discordgo.MessageCreate
 		err = g.cmdEmoji(s, m, tail)
 	case "newcolor":
 		NewColor(s, m, tail)
+	case "previewcolor":
+		PreviewColor(s, m, tail)
+	case "printcolors":
+		PrintColors(s, m)
+	case "help":
+		PostHelp(s, m)
+		s.ChannelMessageDelete(m.ChannelID, m.ID)
 	case "newserver":
 		if CheckAdmin(m.Author.ID) {
 			Channel, _ := s.State.Channel(m.ChannelID)
@@ -167,4 +179,12 @@ func (g *GBFBot) CloseSession() {
 	}
 
 	fmt.Println("Session Closed")
+}
+
+func PostHelp(session *discordgo.Session, m * discordgo.MessageCreate) {
+	em := discordgo.MessageEmbed{
+		Title: "Cagloli Help!",
+		Description: HelpText,
+	}
+	SendEmbedAndDeleteAfterTime(session, m.ChannelID, em)
 }

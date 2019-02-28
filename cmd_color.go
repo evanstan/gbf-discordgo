@@ -27,14 +27,10 @@ type Roles struct {
 }
 
 var (
+	printtime = time.Now().Add(time.Minute * -5)
 	colorconfig ColorConfig
 	CreatedRoles = map[string]map[string]Roles{}
 	SpamChannel = "429307503537422336"
-	HelpText = `Help for Color-Bot
-<<PrintColors   https://nayu.moe/colors
-<<NewColor   "Assign a random color to the current user"
-<<NewColor ColorName   "Assign the specified color to the current user"
-<<PreviewColor ColorName   "Post a preview image of the color"`
 )
 
 func init() {
@@ -292,5 +288,31 @@ func NewColor(session *discordgo.Session, m *discordgo.MessageCreate, color stri
 			SendMessageAndDeleteAfterTime(session, m.ChannelID, "Color not found, pls use <<PrintColors.")
 		}
 	}
+	session.ChannelMessageDelete(m.ChannelID, m.ID)
+}
+
+func PreviewColor(session *discordgo.Session, m *discordgo.MessageCreate, color string) {
+	if _, ok := colorconfig.Colors[color]; ok {
+		Embed := PreviewRole(session, color)
+		SendEmbedAndDeleteAfterTime(session, m.ChannelID, Embed)
+	} else {
+		SendMessageAndDeleteAfterTime(session, m.ChannelID, "Color not found, pls use printcolors.")
+	}
+	session.ChannelMessageDelete(m.ChannelID, m.ID)
+}
+
+func PrintColors(session * discordgo.Session, m *discordgo.MessageCreate) {
+	if time.Since(printtime).Minutes() < 5 {
+		return
+	}
+
+	printtime = time.Now()
+	file, _ := os.Open("colors.jpg")
+	Message, err := session.ChannelFileSend(m.ChannelID, "colors.jpg", file)
+	if err != nil {
+		return
+	}
+	file.Close()
+	go DeleteMessageAfterTime(session, Message, 5)
 	session.ChannelMessageDelete(m.ChannelID, m.ID)
 }
