@@ -29,6 +29,8 @@ var (
 !newcolor   "Assign a random color to the current user"
 !newcolor ColorName   "Assign the specified color to the current user"
 !previewcolor ColorName   "Post a preview image of the color"`
+	SpamChannel = "429307503537422336"
+	TestChannel = "431069931476484108"
 )
 
 //Event handler
@@ -84,7 +86,6 @@ func (g *GBFBot) messageHandler(s *discordgo.Session, m *discordgo.MessageCreate
 		PrintColors(s, m)
 	case "help":
 		PostHelp(s, m)
-		s.ChannelMessageDelete(m.ChannelID, m.ID)
 	case "newserver":
 		if CheckAdmin(m.Author.ID) {
 			Channel, _ := s.State.Channel(m.ChannelID)
@@ -97,7 +98,17 @@ func (g *GBFBot) messageHandler(s *discordgo.Session, m *discordgo.MessageCreate
 			RemoveAllColors(s, Channel.GuildID)
 			s.ChannelMessageDelete(m.ChannelID, m.ID)
 		}
+	case "reloacolors":
+		if CheckAdmin(m.Author.ID) {
+			Channel, _ := s.State.Channel(m.ChannelID)
+			colorconfig = ColorConfig{}
+			createConfig(&colorconfig)
+			CreateNewRoles(s, Channel.GuildID)
+			s.ChannelMessageDelete(m.ChannelID, m.ID)
+		}
 	}
+
+
 
 	if err != nil {
 		_, _ = s.ChannelMessageSend(m.ChannelID, err.Error())
@@ -182,9 +193,12 @@ func (g *GBFBot) CloseSession() {
 }
 
 func PostHelp(session *discordgo.Session, m * discordgo.MessageCreate) {
-	em := discordgo.MessageEmbed{
-		Title: "Cagloli Help!",
-		Description: HelpText,
+	if(m.ChannelID == SpamChannel || m.ChannelID == TestChannel) {
+		em := discordgo.MessageEmbed{
+			Title: "Cagloli Help!",
+			Description: HelpText,
+		}
+		SendEmbedAndDeleteAfterTime(session, m.ChannelID, em)
 	}
-	SendEmbedAndDeleteAfterTime(session, m.ChannelID, em)
+	session.ChannelMessageDelete(m.ChannelID, m.ID)
 }

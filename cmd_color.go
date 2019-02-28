@@ -30,7 +30,6 @@ var (
 	printtime = time.Now().Add(time.Minute * -5)
 	colorconfig ColorConfig
 	CreatedRoles = map[string]map[string]Roles{}
-	SpamChannel = "429307503537422336"
 )
 
 func init() {
@@ -269,50 +268,56 @@ func SendEmbedAndDeleteAfterTime(session *discordgo.Session, ChannelID string, E
 }
 
 func NewColor(session *discordgo.Session, m *discordgo.MessageCreate, color string) {
-	Channel, _ := session.State.Channel(m.ChannelID)
-	resp := RemoveColorFromMember(session, Channel.GuildID, m.Author.ID)
-	if resp {
-		return
-	}
+	if(m.ChannelID == SpamChannel || m.ChannelID == TestChannel) {
+		Channel, _ := session.State.Channel(m.ChannelID)
+		resp := RemoveColorFromMember(session, Channel.GuildID, m.Author.ID)
+		if resp {
+			return
+		}
 
-	if color == "" {
-		UpdateMemberColorRandom(session, Channel.GuildID, m.Author.ID)
-	} else {
-		if _, ok := CreatedRoles[Channel.GuildID][color]; ok {
-			UpdateMemberColor(session, Channel.GuildID, m.Author.ID, color)
-		}else if _, ok := colorconfig.Colors[color]; ok {
+		if color == "" {
 			UpdateMemberColorRandom(session, Channel.GuildID, m.Author.ID)
-			SendMessageAndDeleteAfterTime(session, m.ChannelID, "Color not found available on this server.")
 		} else {
-			UpdateMemberColorRandom(session, Channel.GuildID, m.Author.ID)
-			SendMessageAndDeleteAfterTime(session, m.ChannelID, "Color not found, pls use <<PrintColors.")
+			if _, ok := CreatedRoles[Channel.GuildID][color]; ok {
+				UpdateMemberColor(session, Channel.GuildID, m.Author.ID, color)
+			}else if _, ok := colorconfig.Colors[color]; ok {
+				UpdateMemberColorRandom(session, Channel.GuildID, m.Author.ID)
+				SendMessageAndDeleteAfterTime(session, m.ChannelID, "Color not found available on this server.")
+			} else {
+				UpdateMemberColorRandom(session, Channel.GuildID, m.Author.ID)
+				SendMessageAndDeleteAfterTime(session, m.ChannelID, "Color not found, pls use <<PrintColors.")
+			}
 		}
 	}
 	session.ChannelMessageDelete(m.ChannelID, m.ID)
 }
 
 func PreviewColor(session *discordgo.Session, m *discordgo.MessageCreate, color string) {
-	if _, ok := colorconfig.Colors[color]; ok {
-		Embed := PreviewRole(session, color)
-		SendEmbedAndDeleteAfterTime(session, m.ChannelID, Embed)
-	} else {
-		SendMessageAndDeleteAfterTime(session, m.ChannelID, "Color not found, pls use printcolors.")
+	if(m.ChannelID == SpamChannel || m.ChannelID == TestChannel) {
+		if _, ok := colorconfig.Colors[color]; ok {
+			Embed := PreviewRole(session, color)
+			SendEmbedAndDeleteAfterTime(session, m.ChannelID, Embed)
+		} else {
+			SendMessageAndDeleteAfterTime(session, m.ChannelID, "Color not found, pls use printcolors.")
+		}
 	}
 	session.ChannelMessageDelete(m.ChannelID, m.ID)
 }
 
 func PrintColors(session * discordgo.Session, m *discordgo.MessageCreate) {
-	if time.Since(printtime).Minutes() < 5 {
-		return
-	}
+	if(m.ChannelID == SpamChannel || m.ChannelID == TestChannel) {
+		if time.Since(printtime).Minutes() < 5 {
+			return
+		}
 
-	printtime = time.Now()
-	file, _ := os.Open("colors.jpg")
-	Message, err := session.ChannelFileSend(m.ChannelID, "colors.jpg", file)
-	if err != nil {
-		return
+		printtime = time.Now()
+		file, _ := os.Open("colors.jpg")
+		Message, err := session.ChannelFileSend(m.ChannelID, "colors.jpg", file)
+		if err != nil {
+			return
+		}
+		file.Close()
+		go DeleteMessageAfterTime(session, Message, 5)
 	}
-	file.Close()
-	go DeleteMessageAfterTime(session, Message, 5)
 	session.ChannelMessageDelete(m.ChannelID, m.ID)
 }
